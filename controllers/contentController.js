@@ -2,7 +2,8 @@ require("dotenv").config();
 const { google } = require("googleapis");
 const CustomError = require("../ErrorHandling/Error");
 const { oAuth2Client } = require("../utils/oAuth.js");
-const fs = require('fs');
+const {Readable}=require('stream');
+
 
 
 //Create Page Folder on drive for new page
@@ -130,9 +131,9 @@ async function uploadTextFileToDrive(fileName, pagenum, token,text) {
     parents: [pageFolderId], // Specify the folder ID as the parent
   };
 
-  const media = {
+ const media = {
     mimeType: "text/plain",
-    body: fs.createReadStream(text),
+    body: textToStream(text),
   };
 
   // Upload the text file
@@ -152,7 +153,7 @@ async function uploadTextFileToDrive(fileName, pagenum, token,text) {
 
       console.log(`Text file uploaded successfully: ${file.data.id}`);
       // Delete the local text file after upload
-      fs.unlinkSync(fileName);
+      // fs.unlinkSync(fileName);
     }
   );
 }
@@ -205,4 +206,11 @@ async function getPageFolderId(drive, parentFolderId, pagenum) {
     console.error("Error getting page folder ID:", error);
     throw error;
   }
+}
+
+function textToStream(text){
+  const readableStream = new Readable();
+  readableStream.push(text);
+  readableStream.push(null);
+  return readableStream;
 }
