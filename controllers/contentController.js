@@ -91,11 +91,11 @@ exports.createTextFilesAndUpload = async (req, res, next) => {
 
     // Create a text file
     const fileName = `page_${pagenum}_v${max}.txt`;
-    fs.writeFileSync(fileName, text, "utf-8");
-    console.log(`File ${fileName} created successfully.`);
+    // fs.writeFileSync(fileName, text, "utf-8");
+    // console.log(`File ${fileName} created successfully.`);
 
     // Upload the text file to Google Drive
-    await uploadTextFileToDrive(fileName, pagenum, token);
+    await uploadTextFileToDrive(fileName, pagenum, token,text);
 
     return res.status(200).json({
       success: true,
@@ -109,7 +109,7 @@ exports.createTextFilesAndUpload = async (req, res, next) => {
 
 //Helpers--------------------------------------------------------------
 
-async function uploadTextFileToDrive(fileName, pagenum, token) {
+async function uploadTextFileToDrive(fileName, pagenum, token,text) {
   oAuth2Client.setCredentials(token);
 
   const drive = google.drive({ version: "v3", auth: oAuth2Client });
@@ -134,7 +134,7 @@ async function uploadTextFileToDrive(fileName, pagenum, token) {
 
   const media = {
     mimeType: "text/plain",
-    body: fs.createReadStream(fileName),
+    body: fs.createReadStream(text),
   };
 
   // Upload the text file
