@@ -80,7 +80,7 @@ exports.createTextFilesAndUpload = async (req, res, next) => {
     const result = await s3
       .putObject({
         Bucket: process.env.CYCLIC_BUCKET_NAME,
-        key: `page.txt`,
+        Key: `page._${pagenum}_v${max}.txt`,
         Body: text,
       })
       .promise();
