@@ -2,10 +2,8 @@ require("dotenv").config();
 const { google } = require("googleapis");
 const CustomError = require("../ErrorHandling/Error");
 const { oAuth2Client } = require("../utils/oAuth.js");
-// const AWS = require("aws-sdk");
-// const s3 = new AWS.S3();
-const memfs = require('memfs');
-const fs = memfs.fs;
+const fs = require('fs');
+
 
 //Create Page Folder on drive for new page
 exports.createPageFolder = async (req, res, next) => {
