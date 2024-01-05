@@ -3,6 +3,8 @@ const { google } = require("googleapis");
 const CustomError = require("../ErrorHandling/Error");
 const fs = require("fs");
 const { oAuth2Client } = require("../utils/oAuth.js");
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3();
 
 //Create Page Folder on drive for new page
 exports.createPageFolder = async (req, res, next) => {
@@ -74,6 +76,17 @@ exports.createTextFilesAndUpload = async (req, res, next) => {
   try {
     const { updatedDataFormat } = req.body;
     const { max, pagenum, text } = updatedDataFormat;
+
+    const result = await s3
+      .putObject({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        key: `page_${pagenum}_v${max}.txt`,
+        Body: text,
+      })
+      .promise();
+
+    console.log("S3 data: ", result);
+
 
     // Create a text file
     const fileName = `page_${pagenum}_v${max}.txt`;
