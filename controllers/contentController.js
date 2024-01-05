@@ -1,10 +1,11 @@
 require("dotenv").config();
 const { google } = require("googleapis");
 const CustomError = require("../ErrorHandling/Error");
-const fs = require("fs");
 const { oAuth2Client } = require("../utils/oAuth.js");
-const AWS = require("aws-sdk");
-const s3 = new AWS.S3();
+// const AWS = require("aws-sdk");
+// const s3 = new AWS.S3();
+const memfs = require('memfs');
+const fs = memfs.fs;
 
 //Create Page Folder on drive for new page
 exports.createPageFolder = async (req, res, next) => {
@@ -77,15 +78,15 @@ exports.createTextFilesAndUpload = async (req, res, next) => {
     const { updatedDataFormat } = req.body;
     const { max, pagenum, text } = updatedDataFormat;
 
-    const result = await s3
-      .putObject({
-        Bucket: process.env.CYCLIC_BUCKET_NAME,
-        Key: `page._${pagenum}_v${max}.txt`,
-        Body: text,
-      })
-      .promise();
+    // const result = await s3
+    //   .putObject({
+    //     Bucket: process.env.CYCLIC_BUCKET_NAME,
+    //     Key: `page._${pagenum}_v${max}.txt`,
+    //     Body: text,
+    //   })
+    //   .promise();
 
-    console.log("S3 data: ", result);
+    // console.log("S3 data: ", result);
 
 
     // Create a text file
